@@ -19,8 +19,24 @@ from django.http import HttpResponse
 def index(request):
     fund_codes = ["005928", "000001"]
     freq = 5
-    mult_fund_display(fund_codes, freq)
+    #mult_fund_display(fund_codes, freq)
     return render(request,"homePage.html")
+
+#测试ajax
+def test_ajax(request):
+    #
+    if request.method == "GET":
+        return render(request, 'index.html')
+
+    res = {"code": 101, "msg": "请求无效"}
+    #
+    if request.is_ajax():
+        rest = request.POST
+        s1 = int(rest.get("con1"))
+        s2 = int(rest.get("con2"))
+        s3 = s1 + s2
+        res["msg"] = s3
+    return JsonResponse(res) // 成功与否都返回json数据格式
 
 def dataUpDate(request):
     return render(request)
