@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>HomePage</title>
     {% load static %}
-    <script src="{% static 'dataRefresher\jquery-3.7.1.js' %} "></script>
+    <script src="static/jquery/jquery-3.7.1.js"></script>
+
     <script>
     $("#sub").click(function () {
         $.ajax({
@@ -19,13 +20,9 @@
             }
         })
     })
-</script>
-python manage.py runserver
-
-
+    </script>
 </head>
 <body>
-
 <div>
     <input type="text" id="cont1"> +
     <input type="text" id="cont2"> =
@@ -33,14 +30,7 @@ python manage.py runserver
 </div>
 <br>
 <input type="submit" class="btn-primary" id="sub">
+</br>
 
-<table >
-    <thead>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-        </tr>
-        </thead>
-</table>
 </body>
 </html>

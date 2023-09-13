@@ -13,7 +13,7 @@ pd.set_option('display.max_columns', None)
 #显示所有行
 pd.set_option('display.max_rows', None)
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 def index(request):
@@ -24,19 +24,17 @@ def index(request):
 
 #测试ajax
 def test_ajax(request):
-    #
+    print("41")
     if request.method == "GET":
-        return render(request, 'index.html')
-
-    res = {"code": 101, "msg": "请求无效"}
-    #
+        return render(request, 'homePage.html')
+    resquest = {"code": 101, "msg": "请求无效"}
     if request.is_ajax():
         rest = request.POST
         s1 = int(rest.get("con1"))
         s2 = int(rest.get("con2"))
         s3 = s1 + s2
-        res["msg"] = s3
-    return JsonResponse(res) // 成功与否都返回json数据格式
+        resquest["msg"] = s3
+    return JsonResponse(request)
 
 def dataUpDate(request):
     return render(request)
