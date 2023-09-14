@@ -13,14 +13,28 @@ pd.set_option('display.max_columns', None)
 #显示所有行
 pd.set_option('display.max_rows', None)
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 def index(request):
     fund_codes = ["005928", "000001"]
     freq = 5
-    mult_fund_display(fund_codes, freq)
+    #mult_fund_display(fund_codes, freq)
     return render(request,"homePage.html")
+
+#测试ajax
+def test_ajax(request):
+    print("41")
+    if request.method == "GET":
+        return render(request, 'homePage.html')
+    resquest = {"code": 101, "msg": "请求无效"}
+    if request.is_ajax():
+        rest = request.POST
+        s1 = int(rest.get("con1"))
+        s2 = int(rest.get("con2"))
+        s3 = s1 + s2
+        resquest["msg"] = s3
+    return JsonResponse(request)
 
 def dataUpDate(request):
     return render(request)
