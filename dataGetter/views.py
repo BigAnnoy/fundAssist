@@ -5,6 +5,8 @@ from datetime import datetime
 import pandas as pd
 import time
 from datetime import timedelta
+
+from django.views.decorators.http import require_http_methods
 from tabulate import tabulate
 import warnings
 warnings.filterwarnings("ignore")
@@ -15,6 +17,11 @@ pd.set_option('display.max_rows', None)
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 
+def data_refresher(request):
+    fund_codes = ["005928", "000001"]
+    freq = 5
+    mult_fund_display(fund_codes, freq)
+    JsonResponse(request)
 
 def index(request):
     fund_codes = ["005928", "000001"]
@@ -23,18 +30,16 @@ def index(request):
     return render(request,"homePage.html")
 
 #测试ajax
+@require_http_methods(["GET", "POST"])
 def test_ajax(request):
     print("41")
-    if request.method == "GET":
-        return render(request, 'homePage.html')
-    resquest = {"code": 101, "msg": "请求无效"}
-    if request.is_ajax():
-        rest = request.POST
-        s1 = int(rest.get("con1"))
-        s2 = int(rest.get("con2"))
-        s3 = s1 + s2
-        resquest["msg"] = s3
-    return JsonResponse(request)
+    res = {"code": 101, "msg": "请求无效"}
+    rest = request.POST
+    s1 = int(rest.get("con1"))
+    s2 = int(rest.get("con2"))
+    s3 = s1 + s2
+    res["msg"] = s3
+    return JsonResponse(res)
 
 def dataUpDate(request):
     return render(request)
@@ -104,7 +109,6 @@ def get_fin_change_weighted(fund_code, freq):
 def mult_fund_display(fund_codes, freq):
     for i in fund_codes:
         # displaying the DataFrame
-
         print("基金编号:" + i)
         print(tabulate(get_fin_change_weighted(i, freq).tail(10), headers='keys', tablefmt='pretty'))
 
