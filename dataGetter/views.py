@@ -17,7 +17,8 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
-
+from django.http import JsonResponse
+from django_pandas.io import read_frame
 
 def data_refresher(request):
 
@@ -117,3 +118,13 @@ def mult_fund_display(fund_codes, freq):
         # displaying the DataFrame
         print("基金编号:" + i)
         print(tabulate(get_fin_change_weighted(i, freq).tail(10), headers='keys', tablefmt='pretty'))
+
+def table_view(request):
+    data = {'name': ['Alice', 'Bob', 'Charlie', 'Dave'],
+            'age': [25, 32, 18, 47],
+            'gender': ['Female', 'Male', 'Male', 'Male']}
+    df = pd.DataFrame(data)
+    data = read_frame(df)
+    columns = list(data.columns)  # 获取dataframe的列名
+    context = {'data': data.to_json(orient='values'), 'columns': columns}  # 将dataframe转换为json
+    return render(request, 'tablePart.html', context)

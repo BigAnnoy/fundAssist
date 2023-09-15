@@ -4,40 +4,47 @@
     <meta charset="UTF-8">
     <title>HomePage</title>
     {% load static %}
-    <script src="{% static "jquery/jquery-3.7.1.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
-	<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
-	<script>
+    <script src="static/jquery/jquery-3.7.1.js"></script>
+    <script>
         $(document).ready(function(){
-			$('#tab').DataTable({
-				"paging": false
-					}
-			);
-
+            alert("1")
             $.ajax({
             url:"/data-refresh/",
             success:function (data) {
+            alert("!")
             }
-            })});
+            })
     </script>
 </head>
 <body>
-<table id="tab" class="hover row-border" width="80%" border="1">
-	<thead>
-		<tr>
-			<th>Column 1</th>
-			<th>Column 2</th>
-			<th>Column 3</th>
-			<th>Column 4</th>
-			<th>Column 5</th>
-			<th>Column 6</th>
-			<th>Column 7</th>
-			<th>Column 8</th>
-			<th>Column 9</th>
-		</tr>
-	</thead>
+
+<table>
+    <thead>
+        <tr>
+            {% for col in columns %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
+
+<div>
+    <input type="text" id="cont1"> +
+    <input type="text" id="cont2"> =
+    <input type="text" readonly id="total">
+</div>
+<br>
+<input type="submit" class="btn-primary" id="sub" value="submit">
 
 <script>
     $("#sub").click(function () {
