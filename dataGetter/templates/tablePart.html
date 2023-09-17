@@ -10,23 +10,13 @@
     var columns = {{ columns|safe }};
 </script>
 
-<table>
-    <thead>
-        <tr>
-            {% for col in columns %}
-            <th>{{ col }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in data %}
-        <tr>
-            {% for value in row %}
-            <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="ui container" id='result_table' style="width: 100%; overflow-x: scroll; overflow-y: hidden;">
+
+        {{ ptable|safe }}
+</div>
+
+
+
+
 </body>
 </html>

@@ -21,11 +21,14 @@ from django.http import JsonResponse
 from django_pandas.io import read_frame
 
 def data_refresher(request):
-
     fund_codes = ["005928", "000001"]
     freq = 5
+    fin_change_weighted=get_fin_change_weighted(fund_codes[0],freq)
    # mult_fund_display(fund_codes, freq)
-    return HttpResponse(request)
+    res = {"fundCode": fund_codes[0]}
+    res["fundData"]=fin_change_weighted.to_html()
+    print("数据已经刷新")
+    return JsonResponse(res)
 
 
 def index(request):
@@ -124,7 +127,9 @@ def table_view(request):
             'age': [25, 32, 18, 47],
             'gender': ['Female', 'Male', 'Male', 'Male']}
     df = pd.DataFrame(data)
-    data = read_frame(df)
-    columns = list(data.columns)  # 获取dataframe的列名
-    context = {'data': data.to_json(orient='values'), 'columns': columns}  # 将dataframe转换为json
+    context={"ptable":df.to_html()}
+
     return render(request, 'tablePart.html', context)
+
+def show_status(request):
+    print("回调成功")
