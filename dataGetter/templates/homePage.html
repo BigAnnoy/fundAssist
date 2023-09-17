@@ -12,6 +12,7 @@
             url:"/data-refresh/",
             success:function (data) {
                 $("#tableHead").text("基金编码："+data.fundCode)
+                $("#data_refresh_time").text("数据刷新时间："+data.data_refresh_time)
                 $("#tablePart").html(data.fundData)
             }
             })});
@@ -24,6 +25,7 @@
 
 <h1 style="font-size: xx-large" >基金涨跌实时数据</h1>
 <h2 id="tableHead" class="label" style="font-size: large"></h2>
+<h2 id="data_refresh_time" class="label" style="font-size: large"></h2>
 <div class="primary" id='tablePart' style="overflow-x: scroll; overflow-y: hidden;font-size: small">
 
 
