@@ -9,40 +9,43 @@
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <script src="static/js/bootstrap.bundle.min.js"></script>
 
-    <script>
+   <script>
         $(document).ready(function(){
             $.ajax({
             url:"/data-refresh/",
             success:function (data) {
-                $("#tableHead").text("基金编码："+data.fundCode)
+                $("#tableHead").text("基金编码："+data.fund_codes[0])
                 $("#data_refresh_time").text("数据刷新时间："+data.data_refresh_time)
-                $("#tablePart").html(data.fundData)
+                $("#tablePart").html(data.fund_data[data.fund_codes[0]])
             }
             })});
     </script>
+
 </head>
 
 <body>
 
 
+
+
 <h1 class="page-header" >基金涨跌实时数据</h1>
 
-<ul class="nav nav-tabs">
-  <li class="nav-item">
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item" data-toggle="tab">
     <a class="nav-link active" aria-current="page" href="#">Active</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link disabled">Disabled</a>
-  </li>
 
+    <!--动态展示标签-->
+    {% for i in fund_list_dy %}
+      <li class="nav-item" id={{i}}  data-toggle="tab">
+        <a class="nav-link" href="#">
+        {{ i }}</a>
+      </li>
+    {% endfor %}
 </ul>
-
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>
+</div>
 
 
 <h2 id="tableHead" class="label" style="font-size: large"></h2>
