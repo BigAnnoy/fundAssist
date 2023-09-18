@@ -33,7 +33,7 @@ def data_refresher(request):
     res["fund_data"]={}
     for i in fund_codes:
         r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
-        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table table-dark table-striped")
+        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
     res["data_refresh_time"]=data_refresh_time
     #res["fundData"]=fin_change_weighted.to_html()
     print("数据已经刷新")
