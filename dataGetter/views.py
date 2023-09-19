@@ -20,7 +20,7 @@ from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
 from django_pandas.io import read_frame
 
-fund_codes= ["005928", "000001"]
+fund_codes= ["001644","007164","005506","009876","008960","006080","008084","014162","005763"]
 freq = 5
 
 def data_refresher(request):
@@ -76,7 +76,8 @@ def get_core_data(origin_data_dict, stock_code):
     while len(single_df_last)==0:
         single_df_last=single_df[single_df["日期"].dt.date == last_deal_time]
         last_deal_time=last_deal_time-timedelta(1)
-    single_df_last_close = single_df[single_df["日期"].dt.date != last_deal_time].iloc[-1, :, ]
+    single_df_last_close = single_df[single_df["日期"].dt.date != (last_deal_time+timedelta(1))].iloc[-1, :, ]
+
     real_time_change = single_df_last[["日期", "收盘"]]
     real_time_change[stock_code] = real_time_change["收盘"] / single_df_last_close['收盘'] - 1
     real_time_change = real_time_change.drop("收盘", axis=1)
