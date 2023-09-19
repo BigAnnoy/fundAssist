@@ -20,14 +20,11 @@ from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
 from django_pandas.io import read_frame
 
+fund_codes= ["005928", "000001"]
+freq = 5
+
 def data_refresher(request):
-    fund_codes = ["005928", "000001"]
-    freq = 5
     data_refresh_time=str(datetime.today()).split('.')[0]
-    #for i in fund_codes:
-    #    ftime,fin_change_weighted=get_fin_change_weighted(fund_codes[0],freq)
-   # mult_fund_display(fund_codes, freq)
-   #res = {"fundCode": fund_codes[0]}
     res={}
     res["fund_codes"]=fund_codes
     res["fund_data"]={}
@@ -39,27 +36,9 @@ def data_refresher(request):
     print("数据已经刷新")
     return JsonResponse(res)
 
-
 def index(request):
-    fund_codes = ["005928", "000001"]
-    freq = 5
-    # mult_fund_display(fund_codes, freq)
     context={"fund_list_dy":fund_codes}
     return render(request, "homePage.html",context)
-
-
-# 测试ajax
-@require_http_methods(["GET", "POST"])
-def test_ajax(request):
-    print("41")
-    res = {"code": 101, "msg": "请求无效"}
-    rest = request.POST
-    s1 = int(rest.get("con1"))
-    s2 = int(rest.get("con2"))
-    s3 = s1 + s2
-    res["msg"] = s3
-    return JsonResponse(res)
-
 
 def dataUpDate(request):
     return render(request)
@@ -136,14 +115,3 @@ def mult_fund_display(fund_codes, freq):
         print("基金编号:" + i)
         print(tabulate(i,get_fin_change_weighted(i, freq).tail(10), headers='keys', tablefmt='pretty'))
 
-def table_view(request):
-    data = {'name': ['Alice', 'Bob', 'Charlie', 'Dave'],
-            'age': [25, 32, 18, 47],
-            'gender': ['Female', 'Male', 'Male', 'Male']}
-    df = pd.DataFrame(data)
-    context={"ptable":df.to_html()}
-
-    return render(request, 'tablePart.html', context)
-
-def show_status(request):
-    print("回调成功")
