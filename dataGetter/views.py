@@ -31,6 +31,7 @@ def data_refresher(request):
     res={}
     res["fund_codes"]=fund_codes
     res["fund_data"]={}
+
     for i in fund_codes:
         r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")

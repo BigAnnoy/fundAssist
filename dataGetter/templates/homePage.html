@@ -4,58 +4,55 @@
     <meta charset="UTF-8">
     <title>基金涨跌实时数据</title>
     {% load static %}
-    <script src="static/jquery/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="static/jquery/jquery-3.7.1.js"></script>
     <link  rel="stylesheet" href="static/css/picnic.min.css">
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <script src="static/js/bootstrap.bundle.min.js"></script>
-
-   <script>
-        $(document).ready(function(){
+    <script type="text/javascript" src="static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
             $.ajax({
             url:"/data-refresh/",
             success:function (data) {
-                $("#tableHead").text("基金编码："+data.fund_codes[0])
+                $("#tableHead").text("基金编码："+data.fund_codes[0]);
+                for (x in data.fund_codes){
+                   $("#tab"+x).html(data.fund_data[x]);
+                }
                 $("#data_refresh_time").text("数据刷新时间："+data.data_refresh_time)
                 $("#tablePart").html(data.fund_data[data.fund_codes[0]])
             }
-            })});
+            })
+        });
     </script>
-
 </head>
-
 <body>
-
-
-
-
 <h1 class="page-header" >基金涨跌实时数据</h1>
 
 <ul class="nav nav-tabs" role="tablist">
-  <li class="nav-item" data-toggle="tab">
-    <a class="nav-link active" aria-current="page" href="#">Active</a>
-  </li>
-
-    <!--动态展示标签-->
     {% for i in fund_list_dy %}
-      <li class="nav-item" id={{i}}  data-toggle="tab">
-        <a class="nav-link" href="#">
+      <li class="nav-item"   data-toggle="tab">
+        <a class="nav-link" href="#{{ i }}">
         {{ i }}</a>
       </li>
     {% endfor %}
+
 </ul>
 
 
+<div class="tab-content" id="myTabContent">
+    {% for i in fund_list_dy %}
+    <div class="tab-pane fade" id={{ i }} role="tabpanel" aria-labelledby="home-tab" tabindex="0">123</div>
+    {% endfor %}
+</div>
 
+
+
+<!--
 <h2 id="tableHead" class="label" style="font-size: large"></h2>
 <h2 id="data_refresh_time" class="label" style="font-size: large"></h2>
 <div class="table-primary" id='tablePart' style="overflow-x: scroll; overflow-y: hidden;font-size: small">
 
 
 </div>
-
-
-
-
-
+-->
 </body>
 </html>
