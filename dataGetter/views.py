@@ -23,7 +23,7 @@ from django_pandas.io import read_frame
 def data_refresher(request):
     fund_codes = ["005928", "000001"]
     freq = 5
-    data_refresh_time=datetime.today()
+    data_refresh_time=str(datetime.today()).split('.')[0]
     #for i in fund_codes:
     #    ftime,fin_change_weighted=get_fin_change_weighted(fund_codes[0],freq)
    # mult_fund_display(fund_codes, freq)
@@ -31,14 +31,12 @@ def data_refresher(request):
     res={}
     res["fund_codes"]=fund_codes
     res["fund_data"]={}
-
     for i in fund_codes:
         r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
     res["data_refresh_time"]=data_refresh_time
     #res["fundData"]=fin_change_weighted.to_html()
     print("数据已经刷新")
-    print(res["fund_data"])
     return JsonResponse(res)
 
 
