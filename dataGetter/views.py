@@ -116,7 +116,7 @@ def mult_fund_display(fund_codes, freq):
 def add_fund(request):
     models.funds.objects.create(fund_code="000001",fund_code_zh="华夏成长混合")
     print("添加成功")
-    return JsonResponse
+    return HttpResponse(request)
 
 def fund_list(request):
 
