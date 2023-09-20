@@ -102,7 +102,7 @@ def get_fin_change_weighted(fund_code, freq):
         break
     fin_change_weighted = fin_change
     fin_change_weighted_temp = fin_change * fund_cons.set_index("股票简称")["持仓占比"]
-    fin_change_weighted["加权合计"] = fin_change_weighted_temp.apply(lambda x: x.sum(), axis=1)
+    fin_change_weighted["加权合计"] = fin_change_weighted_temp.apply(lambda x: x.sum(), axis=1)/100
     return data_refresh_time,fin_change_weighted.applymap(lambda x: '%.2f%%' % (x * 100))
 
 
