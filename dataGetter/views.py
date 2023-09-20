@@ -119,5 +119,6 @@ def add_fund(request):
     return HttpResponse(request)
 
 def fund_list(request):
+    flist = models.funds.objects.all().values()
+    return  render(request,"fundManage.html",{"fund_list":flist})
 
-    return  render(request,"fundManage.html")
