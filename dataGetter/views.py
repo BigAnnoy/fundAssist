@@ -5,7 +5,7 @@ from datetime import datetime
 import pandas as pd
 import time
 from datetime import timedelta
-
+from dataGetter import models
 from django.views.decorators.http import require_http_methods
 from tabulate import tabulate
 import warnings
@@ -20,7 +20,7 @@ from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
 from django_pandas.io import read_frame
 
-fund_codes= ["001644","007164","005506","009876","008960","006080","008084","014162","005763"]
+fund_codes= ["005928","001644","007164","005506","009876","008960","006080","008084","014162","005763"]
 freq = 5
 
 def data_refresher(request):
@@ -40,8 +40,6 @@ def index(request):
     context={"fund_list_dy":fund_codes}
     return render(request, "homePage.html",context)
 
-def dataUpDate(request):
-    return render(request)
 
 
 # 获取多个股票的原始数据字典
@@ -102,9 +100,8 @@ def get_fin_change_weighted(fund_code, freq):
         data_refresh_time, origin_data_dict = get_origin_data(freq, stock_codes)
         fin_change = conbin_change(origin_data_dict)
         break
-    e = fund_cons["持仓占比"].sum()
     fin_change_weighted = fin_change
-    fin_change_weighted_temp = fin_change * fund_cons.set_index("股票简称")["持仓占比"] / e
+    fin_change_weighted_temp = fin_change * fund_cons.set_index("股票简称")["持仓占比"]
     fin_change_weighted["加权合计"] = fin_change_weighted_temp.apply(lambda x: x.sum(), axis=1)
     return data_refresh_time,fin_change_weighted.applymap(lambda x: '%.2f%%' % (x * 100))
 
@@ -116,3 +113,11 @@ def mult_fund_display(fund_codes, freq):
         print("基金编号:" + i)
         print(tabulate(i,get_fin_change_weighted(i, freq).tail(10), headers='keys', tablefmt='pretty'))
 
+def add_fund(request):
+    models.funds.objects.create(fund_code="000001",fund_code_zh="华夏成长混合")
+    print("添加成功")
+    return JsonResponse
+
+def fund_list(request):
+
+    return  render(request,"fundManage.html")

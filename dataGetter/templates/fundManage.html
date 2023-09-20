@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基金管理</title>
+</head>
+<body>
+
+    <h1>基金管理</h1>
+    <div>
+        <a href="/fund_list_add/">添加</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>基金编号</th>
+            <th>基金名称</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in class_list %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.title }}</td>
+                <td>
+                    <a href="/edit_class/?nid={{ row.id }}">编辑</a>
+                    |
+                    <a href="/del_class/?nid={{ row.id }}">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>
