@@ -121,9 +121,7 @@ def add_fund(request):
     return render(request,"fundManage.html",{"fund_list":flist})
 
 def  del_fund(request,fund_code):
-    fund_code = request.POST.get("fundcode")
-    print(fund_code)
-    #models.funds.objects.get(fund_code=fund_code).delete()
+    models.funds.objects.get(fund_code=fund_code).delete()
     flist = models.funds.objects.all().values()
     return render(request, "fundManage.html", {"fund_list": flist})
 
