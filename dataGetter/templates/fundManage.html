@@ -15,11 +15,12 @@
 
     <h1 class="page-header" >基金管理</h1>
     <div>
-        <a class="btn btn-primary" href="#" role="button">添加</a>
+        <button type="button" class="btn btn-primary" data-bs-target="#myModal" data-bs-toggle="modal">新增</button>
     </div>
+<br>
      <table>
         <thead>
-        <tr class="table-light">>
+        <tr class="table-light">
             <th>ID</th>
             <th>基金编号</th>
             <th>基金名称</th>
@@ -34,14 +35,47 @@
                 <td>{{ fund.fund_code }}</td>
                 <td>{{ fund.fund_code_zh }}</td>
                 <td>
-                    <a href="/edit_class/?nid={{ fund.id }}">编辑</a>
-                    |
-                    <a href="/del_class/?nid={{ fund.id }}">删除</a>
+                    <a href="/fund_list_del/{{ fund.fund_code }}/" >删除</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+<div class="modal fade"  id="myModal" aria-labelledby="myModallabel"  aria-hidden="true" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="myModallabel">新增基金信息</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="formData" class="form-horizontal" action="/fund_list_add/" method="post">
+        <div class="modal-body">
+
+            <div class="mb-3">
+            <label class="form-label" >基金编号：</label>
+            <input type="number" required value="" name="fundcode" placeholder="六位基金编号" class="form-control"></br>
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" >Save changes</button>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
 </body>
+
+
 
 </html>

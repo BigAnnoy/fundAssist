@@ -114,9 +114,18 @@ def mult_fund_display(fund_codes, freq):
         print(tabulate(i,get_fin_change_weighted(i, freq).tail(10), headers='keys', tablefmt='pretty'))
 
 def add_fund(request):
-    models.funds.objects.create(fund_code="000001",fund_code_zh="华夏成长混合")
-    print("添加成功")
-    return HttpResponse(request)
+    fund_code=request.POST.get("fundcode")
+    fund_code_zh=ef.fund.get_base_info([fund_code])["基金简称"][0]
+    models.funds.objects.create(fund_code=fund_code,fund_code_zh=fund_code_zh)
+    flist = models.funds.objects.all().values()
+    return render(request,"fundManage.html",{"fund_list":flist})
+
+def  del_fund(request,fund_code):
+    fund_code = request.POST.get("fundcode")
+    print(fund_code)
+    #models.funds.objects.get(fund_code=fund_code).delete()
+    flist = models.funds.objects.all().values()
+    return render(request, "fundManage.html", {"fund_list": flist})
 
 def fund_list(request):
     flist = models.funds.objects.all().values()
