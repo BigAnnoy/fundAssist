@@ -20,24 +20,38 @@ from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
 from django_pandas.io import read_frame
 
-fund_codes= ["005928","001644","007164","005506","009876","008960","006080","008084","014162","005763"]
+
+fund_codes=list(models.funds.objects.values_list("fund_code", flat=True))
+#["005928","001644","007164","005506","009876","008960","006080","008084","014162","005763"]
+#上次数据刷新的时间，数据字典{基金名:数据}，基金组成
+data_refresh_last_time=datetime(2000, 1, 1, 15, 30)
+data_refresh_latest= {}
+data_refresh_last_list=[]
+
+time_dif=60
 freq = 5
 
 def data_refresher(request):
-    data_refresh_time=str(datetime.today()).split('.')[0]
-    res={}
-    res["fund_codes"]=fund_codes
-    res["fund_data"]={}
-    for i in fund_codes:
-        r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
-        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
-    res["data_refresh_time"]=data_refresh_time
-    #res["fundData"]=fin_change_weighted.to_html()
-    print("数据已经刷新")
+    global data_refresh_last_time,data_refresh_latest,data_refresh_last_list
+    res = {}
+    res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
+    res["fund_data"] = {}
+    if (datetime.today()-timedelta(seconds=60)>data_refresh_last_time) or res["fund_codes"].sort()!=data_refresh_last_list:
+        for i in res["fund_codes"]:
+            r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
+            res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
+        data_refresh_latest=res["fund_data"]
+        data_refresh_last_time=datetime.today()
+        data_refresh_last_list=res["fund_codes"]
+        print("满足条件，已经获取实时数据")
+    else:
+        res["fund_data"]=data_refresh_latest
+        print("不满足条件，使用上次数据")
+    res["data_refresh_time"]=str(data_refresh_last_time).split('.')[0]
     return JsonResponse(res)
 
 def index(request):
-    context={"fund_list_dy":fund_codes}
+    context={"fund_list_dy":list(models.funds.objects.values_list("fund_code", flat=True))}
     return render(request, "homePage.html",context)
 
 
@@ -129,3 +143,6 @@ def fund_list(request):
     flist = models.funds.objects.all().values()
     return  render(request,"fundManage.html",{"fund_list":flist})
 
+def print_info(request):
+    print(list(models.funds.objects.values_list("fund_code", flat=True)))
+    return HttpResponse(request,)

@@ -16,12 +16,12 @@
     <h1 class="page-header" >基金管理</h1>
     <div>
         <button type="button" class="btn btn-primary" data-bs-target="#myModal" data-bs-toggle="modal">新增</button>
+        <a class="btn btn-info" role="button" aria-disabled="true" href="/index/">返回监控页面</a>
     </div>
 <br>
      <table>
         <thead>
         <tr class="table-light">
-            <th>ID</th>
             <th>基金编号</th>
             <th>基金名称</th>
             <th>操作</th>
@@ -31,7 +31,6 @@
 
         {% for fund in fund_list %}
             <tr>
-                <td>{{ fund.id }}</td>
                 <td>{{ fund.fund_code }}</td>
                 <td>{{ fund.fund_code_zh }}</td>
                 <td>
@@ -61,8 +60,8 @@
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" >Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" >保存</button>
         </div>
         </form>
     </div>
