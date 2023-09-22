@@ -111,3 +111,23 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CACHES = {
+    # default 是缓存名，可以配置多个缓存
+    "default": {
+        # 应用 django-redis 库的 RedisCache 缓存类
+        "BACKEND": "django_redis.cache.RedisCache",
+        # 配置正确的 ip和port
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            # redis客户端类
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # redis连接池的关键字参数
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 100
+            }
+            # 如果 redis 设置了密码，那么这里需要设置对应的密码，如果redis没有设置密码，那么这里也不设置
+            # "PASSWORD": "123456",
+        }
+    }
+}

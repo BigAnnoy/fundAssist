@@ -1,14 +1,16 @@
+import json
+
 from django.shortcuts import render
 import efinance as ef
-import time
 from datetime import datetime
 import pandas as pd
-import time
 from datetime import timedelta
 from dataGetter import models
-from django.views.decorators.http import require_http_methods
 from tabulate import tabulate
 import warnings
+from django.core.cache import cache
+from django_redis import get_redis_connection
+
 
 warnings.filterwarnings("ignore")
 # 显示所有列
@@ -18,7 +20,6 @@ pd.set_option('display.max_rows', None)
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
-from django_pandas.io import read_frame
 
 
 fund_codes=list(models.funds.objects.values_list("fund_code", flat=True))
@@ -48,6 +49,9 @@ def data_refresher(request):
         res["fund_data"]=data_refresh_latest
         print("不满足条件，使用上次数据")
     res["data_refresh_time"]=str(data_refresh_last_time).split('.')[0]
+    conn = get_redis_connection()
+    conn.set("data", json.dumps(data_refresh_latest))
+    #json.loads
     return JsonResponse(res)
 
 def index(request):
@@ -114,7 +118,10 @@ def get_fin_change_weighted(fund_code, freq):
         data_refresh_time, origin_data_dict = get_origin_data(freq, stock_codes)
         fin_change = conbin_change(origin_data_dict)
         break
-    fin_change_weighted = fin_change
+    fin_change_weighted = fin_change.copy()
+    col_temp=fin_change_weighted.columns.tolist()
+    col_temp.insert(0,"加权合计")
+    fin_change_weighted=fin_change_weighted.reindex(columns=col_temp)
     fin_change_weighted_temp = fin_change * fund_cons.set_index("股票简称")["持仓占比"]
     fin_change_weighted["加权合计"] = fin_change_weighted_temp.apply(lambda x: x.sum(), axis=1)/100
     return data_refresh_time,fin_change_weighted.applymap(lambda x: '%.2f%%' % (x * 100))
@@ -144,5 +151,9 @@ def fund_list(request):
     return  render(request,"fundManage.html",{"fund_list":flist})
 
 def print_info(request):
-    print(list(models.funds.objects.values_list("fund_code", flat=True)))
-    return HttpResponse(request,)
+    conn = get_redis_connection()
+    age = str(conn.get('th'), encoding='utf-8')
+
+    conn.set("mc",str(data_refresh_last_time))
+
+    return HttpResponse(request)
