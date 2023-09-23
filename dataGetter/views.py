@@ -37,20 +37,22 @@ def data_refresher(request):
     res = {}
     res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
     res["fund_data"] = {}
+    begin_time=str(datetime.today().date()-timedelta(days=3)).replace("-","")
     if (datetime.today()-timedelta(seconds=60)>data_refresh_last_time) or res["fund_codes"].sort()!=data_refresh_last_list:
+        print("数据抓取开始"+str(datetime.today()))
         for i in res["fund_codes"]:
-            r,res["fund_data"][i]=get_fin_change_weighted(i,freq)
+            r,res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
             res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
         data_refresh_latest=res["fund_data"]
         data_refresh_last_time=datetime.today()
         data_refresh_last_list=res["fund_codes"]
-        print("满足条件，已经获取实时数据")
+        print("满足条件，已经获取实时数据"+str(datetime.today()))
     else:
         res["fund_data"]=data_refresh_latest
         print("不满足条件，使用上次数据")
     res["data_refresh_time"]=str(data_refresh_last_time).split('.')[0]
-    conn = get_redis_connection()
-    conn.set("data", json.dumps(data_refresh_latest))
+    #conn = get_redis_connection()
+    #conn.set("data", json.dumps(data_refresh_latest))
     #json.loads
     return JsonResponse(res)
 
@@ -61,16 +63,9 @@ def index(request):
 
 
 # 获取多个股票的原始数据字典
-def get_origin_data(freq, stock_codes):
-    origin_data_dict = {}
-
+def get_origin_data(freq, stock_codes,begin_time):
     data_refresh_time = str(datetime.today()).split('.')[0]
-    data_time = str(data_refresh_time).replace(":", ",")
-    for stock_code in stock_codes.copy():
-        # 现在的时间
-        now = str(datetime.today()).split('.')[0]
-        # 获取最新一个交易日的分钟级别股票行情数据
-        origin_data_dict[str(stock_code)] = ef.stock.get_quote_history(stock_code, klt=freq)
+    origin_data_dict= ef.stock.get_quote_history(stock_codes, klt=freq,beg=begin_time)
     return data_refresh_time, origin_data_dict
 
 
@@ -110,12 +105,12 @@ def conbin_change(origin_data_dict):
 
 
 # 根据基金编号获取
-def get_fin_change_weighted(fund_code, freq):
+def get_fin_change_weighted(fund_code, freq, begin_time):
     fund_cons = ef.fund.get_invest_position(fund_code)
     stock_codes = fund_cons["股票简称"].tolist()
     stock_perc = fund_cons["持仓占比"]
     while True:
-        data_refresh_time, origin_data_dict = get_origin_data(freq, stock_codes)
+        data_refresh_time, origin_data_dict = get_origin_data(freq, stock_codes,begin_time)
         fin_change = conbin_change(origin_data_dict)
         break
     fin_change_weighted = fin_change.copy()
