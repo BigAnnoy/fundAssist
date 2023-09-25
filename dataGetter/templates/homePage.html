@@ -20,6 +20,7 @@
                    $("#pdata"+data.fund_codes[x]).html(data.fund_data[data.fund_codes[x]]);
                 };
                 $("#data_refresh_time").text("数据刷新时间："+data.data_refresh_time);
+                alert(new Date().getTime())
             }
             })
         });

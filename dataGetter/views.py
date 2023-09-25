@@ -10,8 +10,6 @@ from tabulate import tabulate
 import warnings
 from django.core.cache import cache
 from django_redis import get_redis_connection
-
-
 warnings.filterwarnings("ignore")
 # 显示所有列
 pd.set_option('display.max_columns', None)
@@ -25,32 +23,22 @@ from django.http import JsonResponse
 fund_codes=list(models.funds.objects.values_list("fund_code", flat=True))
 #["005928","001644","007164","005506","009876","008960","006080","008084","014162","005763"]
 #上次数据刷新的时间，数据字典{基金名:数据}，基金组成
-data_refresh_last_time=datetime(2000, 1, 1, 15, 30)
-data_refresh_latest= {}
-data_refresh_last_list=[]
+
 
 time_dif=60
 freq = 5
 
 def data_refresher(request):
-    global data_refresh_last_time,data_refresh_latest,data_refresh_last_list
     res = {}
     res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
     res["fund_data"] = {}
     begin_time=str(datetime.today().date()-timedelta(days=3)).replace("-","")
-    if (datetime.today()-timedelta(seconds=60)>data_refresh_last_time) or res["fund_codes"].sort()!=data_refresh_last_list:
-        print("数据抓取开始"+str(datetime.today()))
-        for i in res["fund_codes"]:
-            res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
-            res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
-        data_refresh_latest=res["fund_data"]
-        data_refresh_last_time=datetime.today()
-        data_refresh_last_list=res["fund_codes"]
-        print("满足条件，已经获取实时数据"+str(datetime.today()))
-    else:
-        res["fund_data"]=data_refresh_latest
-        print("不满足条件，使用上次数据")
-    res["data_refresh_time"]=str(data_refresh_last_time).split('.')[0]
+    print("数据抓取开始"+str(datetime.today()))
+    for i in res["fund_codes"]:
+        res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
+        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
+    print("满足条件，已经获取实时数据"+str(datetime.today()))
+    res["data_refresh_time"]=str(datetime.today()).split('.')[0]
     #conn = get_redis_connection()
     #conn.set("data", json.dumps(data_refresh_latest))
     #json.loads
