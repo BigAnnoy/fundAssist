@@ -20,15 +20,24 @@
                    $("#pdata"+data.fund_codes[x]).html(data.fund_data[data.fund_codes[x]]);
                 };
                 $("#data_refresh_time").text("数据刷新时间："+data.data_refresh_time);
-                alert(new Date().getTime())
             }
             })
         });
     </script>
 </head>
 
-<body><div class="container">
-<h1 class="page-header" >基金涨跌实时数据</h1>
+<body>
+
+
+<div class="container">
+
+
+
+</nav>
+
+
+
+    <h1 class="page-header" >基金涨跌实时数据</h1>
 
   <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" href="/index/">刷新数据</a>
 <a class="btn btn-info btn-lg" role="button" aria-disabled="true" href="/fund_manage/">基金管理</a>
