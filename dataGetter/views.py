@@ -6,10 +6,9 @@ from datetime import datetime
 import pandas as pd
 from datetime import timedelta
 from dataGetter import models
-from tabulate import tabulate
+
 import warnings
-from django.core.cache import cache
-from django_redis import get_redis_connection
+
 warnings.filterwarnings("ignore")
 # 显示所有列
 pd.set_option('display.max_columns', None)
@@ -122,9 +121,5 @@ def fund_list(request):
     return  render(request,"fundManage.html",{"fund_list":flist})
 
 def print_info(request):
-    conn = get_redis_connection()
-    age = str(conn.get('th'), encoding='utf-8')
-
-    conn.set("mc",str(data_refresh_last_time))
 
     return HttpResponse(request)
