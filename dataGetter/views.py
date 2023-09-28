@@ -32,8 +32,8 @@ def data_refresher(request):
     for i in res["fund_codes"]:
         res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
         res["total"][i]=res["fund_data"][i]['加权合计']
-        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
-    res["total"]=res["total"].to_html(classes="table-light")
+        res["fund_data"][i]=res["fund_data"][i].to_html(classes="table table-light",index_names=False)
+    res["total"]=res["total"].to_html(classes="table-light",index_names=False)
     print("满足条件，已经获取实时数据"+str(datetime.today()))
     res["data_refresh_time"]=str(datetime.today()).split('.')[0]
     #conn = get_redis_connection()
