@@ -6,7 +6,6 @@ from datetime import datetime
 import pandas as pd
 from datetime import timedelta
 from dataGetter import models
-
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -20,10 +19,6 @@ from django.http import JsonResponse
 
 
 fund_codes=list(models.funds.objects.values_list("fund_code", flat=True))
-#["005928","001644","007164","005506","009876","008960","006080","008084","014162","005763"]
-#上次数据刷新的时间，数据字典{基金名:数据}，基金组成
-
-
 time_dif=60
 freq = 5
 
@@ -32,10 +27,13 @@ def data_refresher(request):
     res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
     res["fund_data"] = {}
     begin_time=str(datetime.today().date()-timedelta(days=3)).replace("-","")
+    res["total"]=pd.DataFrame()
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
         res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
+        res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light")
+    res["total"]=res["total"].to_html(classes="table-light")
     print("满足条件，已经获取实时数据"+str(datetime.today()))
     res["data_refresh_time"]=str(datetime.today()).split('.')[0]
     #conn = get_redis_connection()
