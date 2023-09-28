@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>基金涨跌实时数据</title>
+    <title>基金数据观测</title>
     {% load static %}
     <script type="text/javascript" src="/static/jquery/jquery-3.7.1.js"></script>
     <link  rel="stylesheet" href="/static/css/picnic.min.css">
@@ -30,14 +30,26 @@
 <body>
 
 
-<div class="container-fluid">
-    <h1 class="page-header" >基金涨跌实时数据</h1>
- </div>
-  <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" href="/index/">刷新数据</a>
-<a class="btn btn-info btn-lg" role="button" aria-disabled="true" href="/fund_manage/">基金管理</a>
-<p4 id="data_refresh_time">数据获取中......</p4>
 
-<div class="container">
+ <div class="container-fluid">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+
+        <span class="fs-4">基金数据观测</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="/fund_manage/" class="nav-link">基金管理</a></li>
+      </ul>
+    </header>
+  </div>
+ <div class="container-fluid">
+  <a class="btn btn-success btn-lg" role="button" aria-disabled="true" href="/index/">刷新数据</a>
+<p4 id="data_refresh_time">数据获取中......</p4>
+</div>
+<span class="border">
+<div class="container-fluid" >
 <ul class="nav nav-tabs justify-content-center" role="tablist" id="myTab">
     <li class="nav-item" role="presentation">
     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">总览</button>
@@ -54,6 +66,6 @@
     {% for i in fund_list_dy %}
        <div class="tab-pane fade" id="pdata{{ i }}" role="tabpanel" aria-labelledby="tab{{i}}" tabindex="0">数据获取中......</div>
     {% endfor %}
-</div></div>
+</div></div></span>
 </body>
 </html>
