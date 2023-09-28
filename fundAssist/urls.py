@@ -22,3 +22,7 @@ urlpatterns = [
     path("datagetter/", include("dataGetter.urls")),
     path("", include("dataGetter.urls"))
 ]
+from django.conf.urls import static
+from fundAssist import settings
+
+urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

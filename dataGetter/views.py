@@ -6,8 +6,9 @@ from datetime import datetime
 import pandas as pd
 from datetime import timedelta
 from dataGetter import models
+
 import warnings
-#from django_redis import get_redis_connection
+
 warnings.filterwarnings("ignore")
 # 显示所有列
 pd.set_option('display.max_columns', None)
@@ -30,7 +31,7 @@ def data_refresher(request):
     res = {}
     res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
     res["fund_data"] = {}
-    begin_time=str(datetime.today().date()-timedelta(days=5)).replace("-","")
+    begin_time=str(datetime.today().date()-timedelta(days=3)).replace("-","")
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
         res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
@@ -119,10 +120,6 @@ def fund_list(request):
     flist = models.funds.objects.all().values()
     return  render(request,"fundManage.html",{"fund_list":flist})
 
-#def print_info(request):
-    #conn = get_redis_connection()
-   # age = str(conn.get('th'), encoding='utf-8')
+def print_info(request):
 
-
-
-   # return HttpResponse(request)
+    return HttpResponse(request)
