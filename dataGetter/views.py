@@ -26,11 +26,10 @@ def data_refresher(request):
     res = {}
     res["fund_codes"] = list(models.funds.objects.values_list("fund_code", flat=True))
     res["fund_data"] = {}
-    begin_time=str(datetime.today().date()-timedelta(days=3)).replace("-","")
     res["total"]=pd.DataFrame()
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
-        res["fund_data"][i]=get_fin_change_weighted(i,freq,begin_time)
+        res["fund_data"][i]=get_fin_change_weighted(i,freq)
         res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light",index_names=False)
     res["total"]=res["total"].to_html(classes="table-light",index_names=False)
@@ -48,8 +47,8 @@ def index(request):
 
 
 # 获取多个股票的原始数据字典
-def get_origin_data(freq, stock_codes,begin_time):
-    origin_data_dict= ef.stock.get_quote_history(stock_codes, klt=freq,beg=begin_time)
+def get_origin_data(freq, stock_codes):
+    origin_data_dict= ef.stock.get_quote_history(stock_codes, klt=freq)
     return  origin_data_dict
 
 
@@ -87,12 +86,12 @@ def conbin_change(origin_data_dict):
 
 
 # 根据单个基金编号获取
-def get_fin_change_weighted(fund_code, freq, begin_time):
+def get_fin_change_weighted(fund_code, freq):
     #获取持仓占比
     fund_cons = ef.fund.get_invest_position(fund_code)
     stock_codes = fund_cons["股票简称"].tolist()
     #获取基金下，多个股票的原始数据
-    origin_data_dict = get_origin_data(freq, stock_codes,begin_time)
+    origin_data_dict = get_origin_data(freq, stock_codes)
     #将原始数据转化为涨幅df
     fin_change_weighted = conbin_change(origin_data_dict)
     fin_change_weighted_temp = fin_change_weighted * fund_cons.set_index("股票简称")["持仓占比"]
