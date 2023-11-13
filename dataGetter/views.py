@@ -30,7 +30,7 @@ def data_refresher(request):
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
         res["fund_data"][i],fund_cons=get_fin_change_weighted(i,freq)
-        fund_cons=fund_cons[["股票代码","持仓占比","股票简称"]].transpose()
+        fund_cons=fund_cons[["股票简称","股票代码","持仓占比"]].transpose()
         res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light",index_names=False)
         res["fund_data"][i]="<br>"+fund_cons.to_html(classes="table-light",header=False,index_names=False)+"<br>"+res["fund_data"][i]
