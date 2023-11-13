@@ -30,9 +30,10 @@ def data_refresher(request):
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
         res["fund_data"][i],fund_cons=get_fin_change_weighted(i,freq)
+        fund_cons=fund_cons[["股票代码","持仓占比","股票简称"]].transpose()
         res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light",index_names=False)
-        res["fund_data"][i]=res["fund_data"][i]+"<br>"+fund_cons.to_html(classes="table-light",index_names=False)
+        res["fund_data"][i]="<br>"+fund_cons.to_html(classes="table-light",header=False,index_names=False)+"<br>"+res["fund_data"][i]
     res["total"]=res["total"].to_html(classes="table-light",index_names=False)
     print("满足条件，已经获取实时数据"+str(datetime.today()))
     res["data_refresh_time"]=str(datetime.today()).split('.')[0]
@@ -82,6 +83,7 @@ def get_core_data(single_df, stock_code):
 def conbin_change(origin_data_dict):
     conbin_change = pd.DataFrame()
     for k, v in origin_data_dict.items():
+
         conbin_change = pd.concat([conbin_change, get_core_data(v, k)], axis=1)
     return conbin_change
 
