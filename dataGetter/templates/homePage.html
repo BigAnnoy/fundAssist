@@ -52,8 +52,8 @@
 <br>
 
 <div class="container-fluid" >
-<div class="d-flex align-items-start">
-<ul class="nav flex-column nav-pills me-3" role="tablist" id="myTab" aria-orientation="vertical">
+
+<ul class="nav  nav-pills me-3 navbar-light bg-light sticky-top" role="tablist" id="myTab" aria-orientation="vertical">
     <li class="nav-item" role="presentation">
     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">总览</button>
     </li>
@@ -67,12 +67,10 @@
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">数据获取中......</div>
     {% for i in fund_list_dy %}
-
        <div class="tab-pane fade" id="pdata{{ i }}" role="tabpanel" aria-labelledby="tab{{i}}" tabindex="0">数据获取中......</div>
-
     {% endfor %}
 </div></div>
-</div>
+
 
 </body>
 </html>
