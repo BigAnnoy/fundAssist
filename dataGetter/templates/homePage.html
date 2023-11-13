@@ -45,12 +45,15 @@
     </header>
   </div>
  <div class="container-fluid">
-  <a class="btn btn-primary" role="button" aria-disabled="true" href="/index/">刷新数据</a>
-<p4 id="data_refresh_time">数据获取中......</p4>
+  <a class="btn btn-success" role="button" aria-disabled="true" href="/index/">刷新数据</a>
+<p4 id="data_refresh_time"></p4>
 </div>
 
+<br>
+
 <div class="container-fluid" >
-<ul class="nav nav-tabs justify-content-center" role="tablist" id="myTab">
+<div class="d-flex align-items-start">
+<ul class="nav flex-column nav-pills me-3" role="tablist" id="myTab" aria-orientation="vertical">
     <li class="nav-item" role="presentation">
     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">总览</button>
     </li>
@@ -64,8 +67,12 @@
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">数据获取中......</div>
     {% for i in fund_list_dy %}
+
        <div class="tab-pane fade" id="pdata{{ i }}" role="tabpanel" aria-labelledby="tab{{i}}" tabindex="0">数据获取中......</div>
+
     {% endfor %}
 </div></div>
+</div>
+
 </body>
 </html>

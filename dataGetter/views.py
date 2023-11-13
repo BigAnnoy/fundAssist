@@ -29,9 +29,10 @@ def data_refresher(request):
     res["total"]=pd.DataFrame()
     print("数据抓取开始"+str(datetime.today()))
     for i in res["fund_codes"]:
-        res["fund_data"][i]=get_fin_change_weighted(i,freq)
+        res["fund_data"][i],fund_cons=get_fin_change_weighted(i,freq)
         res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light",index_names=False)
+        res["fund_data"][i]=res["fund_data"][i]+"<br>"+fund_cons.to_html(classes="table-light",index_names=False)
     res["total"]=res["total"].to_html(classes="table-light",index_names=False)
     print("满足条件，已经获取实时数据"+str(datetime.today()))
     res["data_refresh_time"]=str(datetime.today()).split('.')[0]
@@ -99,7 +100,7 @@ def get_fin_change_weighted(fund_code, freq):
     col_temp.insert(0,"加权合计")
     fin_change_weighted=fin_change_weighted.reindex(columns=col_temp)
     fin_change_weighted["加权合计"] = fin_change_weighted_temp.apply(lambda x: x.sum(), axis=1)/100
-    return fin_change_weighted.applymap(lambda x: '%.2f%%' % (x * 100))
+    return fin_change_weighted.applymap(lambda x: '%.2f%%' % (x * 100)),fund_cons
 
 def add_fund(request):
     fund_code=request.POST.get("fundcode")
