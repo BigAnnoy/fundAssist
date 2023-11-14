@@ -31,12 +31,11 @@ def data_refresher(request):
     for i in res["fund_codes"]:
         res["fund_data"][i],fund_cons=get_fin_change_weighted(i,freq)
         cons_sum=fund_cons["持仓占比"].sum()
-        print(cons_sum)
         fund_cons=fund_cons[["股票简称","股票代码","持仓占比"]].transpose()
-
         res["total"][i]=res["fund_data"][i]['加权合计']
         res["fund_data"][i]=res["fund_data"][i].to_html(classes="table-light",index_names=False)
         res["fund_data"][i]="<br>"+fund_cons.to_html(classes="table-light",header=False,index_names=False)+"<p>持仓占比总和："+str(cons_sum)+"</p>"+"<br>"+res["fund_data"][i]+"<br>"+"<p>当前基金编号:"+i+"</p>"
+    res["total"].loc[len(res["total"])]=res["total"].columns.tolist()
     res["total"]=res["total"].to_html(classes="table-light",index_names=False)
     print("满足条件，已经获取实时数据"+str(datetime.today()))
     res["data_refresh_time"]=str(datetime.today()).split('.')[0]
